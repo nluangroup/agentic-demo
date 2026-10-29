@@ -15,27 +15,42 @@ The service finds its work only through three `Queue-…` lines in the card desc
 
 - The plan is the file under `docs/superpowers/plans/` most recently discussed in this session; otherwise the newest file in that folder. If more than one candidate is plausible, ask the user which one.
 - If the plan has a `**Spec:**` line, that file is the spec. Include it in every check below.
-- Take the card summary from the plan's title (first `#` heading) and the human summary from its `**Goal:**` line.
+- Take the card summary from the plan's title (first `#` heading) and the human summary from its `**Goal:**` line. If there is no Goal line, summarize from the first heading and the paragraph under it.
 
-### 2. Make sure the plan is pushed
+### 2. Make sure the plan is on origin/main
 
-Run, with `<plan>` and `<spec>` as repo-relative paths (omit `<spec>` if there is none):
+This skill never switches branches, merges, rebases or force-pushes.
 
 ```
 git fetch origin
-git status --porcelain -- <plan> <spec>
-git log origin/main..HEAD -- <plan> <spec>
+git status --porcelain -- <plan>
+git diff --quiet origin/main -- <plan>
 ```
 
-Both `git status` and `git log` output must be empty (nothing uncommitted, nothing unpushed). Also confirm the current branch is `main`, or that the plan is on `origin/main` (`git cat-file -e origin/main:<plan>`).
+With a spec, pass both files instead: `-- <plan> <spec>`. Without a spec, pass the plan only.
 
-If either has output: tell the user what is pending and **ask before committing or pushing**. Only commit/push after they agree, then re-run the checks until both are empty.
+The plan (and spec, if named) must have no uncommitted changes (`git status` output empty) and no diff against `origin/main` (`git diff --quiet` exits 0). A file missing from `origin/main` counts as a diff.
 
-Then pin the commit: `git rev-parse origin/main` (the full 40-character SHA of the commit on `origin/main` that contains the plan).
+- Checks pass: continue.
+- On any branch other than `main`: stop and tell the user to get the plan onto `main` themselves. Do not create a card.
+- On `main`, with uncommitted or unpushed changes only: tell the user what is pending and **ask before committing or pushing**. If they agree, commit the plan/spec files, run `git push origin main`, then `git fetch origin` and re-run the checks. If the user declines, stop; do not create a card.
+- Any other mismatch (for example `main` has diverged from `origin/main`): stop and report it. Do not fix it.
 
-### 3. Create the card
+Only after the checks pass, pin the commit: `git rev-parse origin/main` (full 40-character SHA).
+
+### 3. Check for duplicates, then create the card
 
 Use the Atlassian connector tools. Read each tool's schema at run time and use the parameter names it defines; do not assume them.
+
+First search SCRUM for an existing open card for this plan, with the connector's JQL search tool:
+
+```
+project = SCRUM AND text ~ "\"<plan path>\"" AND statusCategory != Done
+```
+
+If a card is found, show its key and summary and ask whether to create another. If the user says no, stop.
+
+Then create the card:
 
 - `createJiraIssue` with cloudId `2cf169bb-d580-472b-b2b0-49d9c66c6364` (site `https://nlundgaard.atlassian.net`; `getAccessibleAtlassianResources` returns it if needed), project key `SCRUM`, issue type `Task`. Leave it in **To Do**; never transition it.
 - Summary: the plan title.
@@ -55,15 +70,15 @@ If the connector wants the description in a particular format (markdown vs. ADF)
 
 ### 4. Read it back and verify
 
-Call `getJiraIssue` for the new key and take the description as the service will see it. Apply the service's rules to each line:
+Call `getJiraIssue` for the new key. If the description comes back as ADF or other rich text, flatten it to plain text first, one paragraph per line, then apply the service's rules to each line:
 
 - Line regex (case-insensitive, multiline): `^\s*(?:[*-]\s+)?\**queue-(repo|plan|commit)\**\s*:\s*\**(\S+?)\**\s*$`
 - Repo must equal `nluangroup/agentic-demo`.
 - Plan must be the plan path from step 1.
-- Commit must match `^[0-9a-f]{40}$` (case-insensitive) and equal the SHA from step 2.
+- Commit must be exactly 40 lowercase hex characters (`^[0-9a-f]{40}$`) and equal the SHA from step 2.
 - Each of repo, plan, commit must match exactly once.
 
-If any check fails, tell the user what was wrong, fix the description (update the issue using the connector's edit tool, or recreate if it cannot be edited), and re-verify. Do not report the card as queued until all three parse.
+If any check fails, edit the description of the card created in this run once (using the connector's edit tool) and re-check. If it still fails, report the card key and the problem and stop. Only ever edit the card created in this run; never delete or recreate a card. Do not report the card as queued until all three parse.
 
 ### 5. Reply
 
