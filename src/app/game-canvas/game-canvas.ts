@@ -34,6 +34,7 @@ const RIGHT_CODES = ['ArrowRight', 'KeyD'];
   host: {
     '(window:keydown)': 'onKeyDown($event)',
     '(window:keyup)': 'onKeyUp($event)',
+    '(window:blur)': 'onBlur()',
   },
 })
 export class GameCanvas {
@@ -104,11 +105,16 @@ export class GameCanvas {
     } else if ([...LEFT_CODES, ...RIGHT_CODES].includes(event.code)) {
       event.preventDefault();
       this.keys.add(event.code);
+      this.pointerX = null;
     }
   }
 
   protected onKeyUp(event: KeyboardEvent): void {
     this.keys.delete(event.code);
+  }
+
+  protected onBlur(): void {
+    this.keys.clear();
   }
 
   protected onPointerMove(event: PointerEvent): void {

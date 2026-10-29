@@ -80,6 +80,30 @@ describe('GameCanvas', () => {
     expect(component.state().basketX + BASKET_WIDTH / 2).toBeCloseTo(100, 0);
   });
 
+  it('keyboard takes over from the pointer', () => {
+    const canvas = (fixture.nativeElement as HTMLElement).querySelector('canvas')!;
+    vi.spyOn(canvas, 'getBoundingClientRect').mockReturnValue({
+      left: 0,
+      width: 480,
+    } as DOMRect);
+    component.state.set(withState());
+    canvas.dispatchEvent(new PointerEvent('pointermove', { clientX: 100 }));
+    component.step(16);
+    const afterPointer = component.state().basketX;
+    key('keydown', 'ArrowRight');
+    component.step(100);
+    expect(component.state().basketX).toBeGreaterThan(afterPointer);
+  });
+
+  it('window blur releases held keys', () => {
+    component.state.set(withState());
+    key('keydown', 'ArrowRight');
+    window.dispatchEvent(new Event('blur'));
+    const before = component.state().basketX;
+    component.step(100);
+    expect(component.state().basketX).toBe(before);
+  });
+
   it('shows game over text with the score', async () => {
     component.state.set(withState({ status: 'over', score: 7, lives: 0 }));
     await fixture.whenStable();
