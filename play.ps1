@@ -4,8 +4,9 @@ $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 
 $ref = if ($Local) { 'HEAD' } else { git fetch origin; "origin/$Branch" }
-$sha = (git rev-parse --verify "$ref^{commit}").Trim()
-if (-not $sha) { throw "Cannot resolve $ref" }
+$sha = git rev-parse --verify "$ref^{commit}"
+if ($LASTEXITCODE -ne 0 -or -not $sha) { throw "Cannot resolve $ref" }
+$sha = $sha.Trim()
 
 $root = Join-Path $env:TEMP 'star-catcher-play'
 $dir = Join-Path $root ($Branch -replace '[\/]', '_')
