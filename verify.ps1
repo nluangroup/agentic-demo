@@ -17,7 +17,7 @@ function Write-Tail {
     $Lines | Select-Object -Last 30 | ForEach-Object { "    $_" }
 }
 
-if (-not (Test-Path (Join-Path $PSScriptRoot 'node_modules'))) {
+if (-not (Test-Path (Join-Path $PSScriptRoot 'node_modules/.package-lock.json'))) {
     $install = Invoke-Captured npm.cmd @('ci')
     if ($install.ExitCode -ne 0) {
         Write-Tail $install.Lines

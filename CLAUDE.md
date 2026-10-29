@@ -15,3 +15,4 @@ These rules override the global workflow whenever a Superpowers plan is executed
 7. Do not run `ng serve` or any long-lived server in a plan run, except inside `verify.ps1`.
 8. Plan and spec documents under `docs/superpowers/` are the approved scope; do not edit them during a plan run.
 9. In plan runs, work on the current branch. Do not create branches or worktrees, do not merge, push or open PRs, and skip `superpowers:using-git-worktrees` and `superpowers:finishing-a-development-branch`. The run ends with commits plus a final summary.
+10. In a fresh clone, run `npm ci` before any other npm/npx command (plan runs start in a fresh clone).
