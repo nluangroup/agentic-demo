@@ -72,13 +72,12 @@ If the connector wants the description in a particular format (markdown vs. ADF)
 
 Call `getJiraIssue` for the new key. If the description comes back as ADF or other rich text, flatten it to plain text first, one paragraph per line, then apply the service's rules to each line:
 
-- Line regex (case-insensitive, multiline): `^\s*(?:[*-]\s+)?\**queue-(repo|plan|commit)\**\s*:\s*\**(\S+?)\**\s*$`
-- Repo must equal `nluangroup/agentic-demo`.
-- Plan must be the plan path from step 1.
-- Commit must be exactly 40 lowercase hex characters (`^[0-9a-f]{40}$`) and equal the SHA from step 2.
-- Each of repo, plan, commit must match exactly once.
+- Line regex, copied from the service's `PlanReference.cs` (case-insensitive, multiline): `^[ \t]*(?:[*-][ \t]+)?\**[ \t]*queue-(repo|plan|commit)\**[ \t]*:[ \t]*\**[ \t]*([^\s*]\S*?)\**\s*$`
+- First match wins, as the service does: for each of repo, plan and commit, the value is the first line that matches; later duplicates are ignored.
+- The first-matched value must be exactly the intended one, character for character: repo `nluangroup/agentic-demo`, plan the plan path from step 1, commit the 40 lowercase hex characters (`^[0-9a-f]{40}$`) of the SHA from step 2. If a value differs in any way (for example the path was turned into a link or picked up extra characters), report the card key and the problem and stop. No edit-and-retry loop.
+- All three keys must be present.
 
-If any check fails, edit the description of the card created in this run once (using the connector's edit tool) and re-check. If it still fails, report the card key and the problem and stop. Only ever edit the card created in this run; never delete or recreate a card. Do not report the card as queued until all three parse.
+Never edit, delete or recreate the card after a failed check. Do not report the card as queued until all three parse and match.
 
 ### 5. Reply
 
