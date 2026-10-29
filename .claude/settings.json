@@ -73,7 +73,7 @@
       "Bash(pwsh *verify.ps1*)",
       "PowerShell(pwsh *verify.ps1*)",
       "PowerShell(./verify.ps1*)",
-      "PowerShell(.\u000berify.ps1*)",
+      "PowerShell(.\\verify.ps1*)",
       "Bash(bash */superpowers/*/scripts/*)",
       "Bash(bash scripts/*)",
       "Bash(bash ../*/scripts/*)",
