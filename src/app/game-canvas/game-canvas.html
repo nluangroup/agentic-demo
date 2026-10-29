@@ -1,0 +1,23 @@
+<div class="stage">
+  <canvas
+    #canvas
+    width="480"
+    height="640"
+    aria-label="Star Catcher game"
+    (pointermove)="onPointerMove($event)"
+  ></canvas>
+  <div class="hud">
+    <span data-testid="score">Score: {{ state().score }}</span>
+    <span data-testid="lives">Lives: {{ state().lives }}</span>
+  </div>
+  @if (message()) {
+    <div class="overlay">
+      <p data-testid="message">
+        {{ message() }}
+        @if (restartHint()) {
+          <br />{{ restartHint() }}
+        }
+      </p>
+    </div>
+  }
+</div>

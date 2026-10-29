@@ -1,0 +1,27 @@
+:host {
+  display: block;
+  height: 100dvh;
+  background: #05070f;
+  color: #fff;
+}
+
+main {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0.5rem;
+}
+
+h1 {
+  margin: 0 0 0.5rem;
+  font:
+    700 1.5rem system-ui,
+    sans-serif;
+}
+
+.board {
+  flex: 1;
+  min-height: 0;
+}
