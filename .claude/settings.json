@@ -89,14 +89,6 @@
       "PowerShell(Copy-Item:*)"
     ],
     "deny": [
-      "Edit(docs/superpowers/**)",
-      "Write(docs/superpowers/**)",
-      "Edit(.claude/**)",
-      "Write(.claude/**)",
-      "Edit(verify.ps1)",
-      "Write(verify.ps1)",
-      "Edit(tools/smoke.mjs)",
-      "Write(tools/smoke.mjs)",
       "Bash(git push:*)",
       "PowerShell(git push:*)",
       "Bash(git push *)",
