@@ -1,59 +1,33 @@
-# StarCatcher
+# Star Catcher
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.5.
+A small Angular 22 game that serves as the demo target for the Claude queue in `nluangroup/jira`: queued Superpowers plans are implemented here by an unattended `claude -p` run.
 
-## Development server
+## Play
 
-To start a local development server, run:
-
-```bash
-ng serve
+```powershell
+./play.ps1                      # serves origin/main on http://localhost:4300
+./play.ps1 -Branch some/branch  # serves origin/some/branch
+./play.ps1 -Local               # serves the local HEAD (nothing pushed yet)
+npm start                       # plain dev server for the working tree
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+`play.ps1` builds a throwaway worktree under `%TEMP%\star-catcher-play`, so your checkout is untouched.
 
-## Code scaffolding
+## Verify
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```powershell
+pwsh -NoProfile -File ./verify.ps1
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Prints one `PASS`, `FAIL` or `SKIPPED` line per check and exits 0 only if nothing failed. The browser smoke check needs a one-time `npx playwright install chromium`.
 
-```bash
-ng generate --help
-```
+## Specs and plans
 
-## Building
+- Specs: `docs/superpowers/specs/`
+- Plans: `docs/superpowers/plans/`
 
-To build the project run:
+Rules for plan runs are in `CLAUDE.md`; headless permissions are in `.claude/settings.json`.
 
-```bash
-ng build
-```
+## Queue this plan
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Ask Claude to queue a plan using the [queue-plan skill](.claude/skills/queue-plan/SKILL.md); it creates the Jira card the queue picks up.
