@@ -46,3 +46,9 @@ browser and celebrate beating it.
 ## Left to the builder
 
 - Line layout inside the game-over message.
+
+## Merge notes
+
+Expected trivial conflicts when merged with the other plans: `state.ts` new
+fields (`best`, `isNewBest`) after `events` and in `initialState`; keep both
+sides.

@@ -46,3 +46,15 @@ ends on its own.
 ## Left to the builder
 
 - Nothing visual.
+
+## Merge notes
+
+- If this merges together with golden star: `rampDifficulty` adds
+  `speed · dt · (factor − 1)` unscaled, so slow-mo would halve only the base
+  speed. After both are merged, multiply the ramp's extra distance by
+  `fallRate(state)` (from `golden-star.ts`) so slow-mo also halves ramped speed.
+- Expected trivial conflict with golden star in `spawn.ts` lines 5–6 (the
+  `SPAWN_INTERVAL_MS` export here vs. the golden probability constant there);
+  keep both.
+- Expected trivial conflict in `rules.ts`: `rampDifficulty` goes directly
+  after `fall`, golden star's `goldenStar` after `collide`; keep both.

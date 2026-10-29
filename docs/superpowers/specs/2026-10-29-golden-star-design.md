@@ -49,3 +49,15 @@ a few seconds, with a visible countdown.
 ## Left to the builder
 
 - Nothing beyond the golden fill colour `#ff8c00`, fixed by the plan.
+
+## Merge notes
+
+- After merging with the difficulty ramp: multiply the ramp's extra distance in
+  `rampDifficulty` by `fallRate(state)` so slow-mo also halves ramped speed.
+- A golden catch also counts toward the combo: combo adds `multiplier − 1` on
+  top of golden's +2. Intended.
+- Expected trivial conflicts: `spawn.ts` lines 5–6 (difficulty's
+  `SPAWN_INTERVAL_MS` export vs. golden's constant); `state.ts` new fields after
+  `events` and in `initialState` (combo, high score, golden); `rules.ts`
+  registration after `collide` (`goldenStar` vs. combo's `applyCombo`). Keep
+  both sides each time.

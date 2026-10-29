@@ -53,3 +53,10 @@ basket and the score jump faster, the moment the run finishes.
 ## Left to the builder
 
 - Pop styling (colour, size), within "near the basket, readable".
+
+## Merge notes
+
+A golden catch also counts toward the combo (`applyCombo` adds `multiplier − 1`
+on top of golden's +2); intended. Expected trivial conflicts: `state.ts` new
+fields after `events` and in `initialState`, and `rules.ts` registration after
+`collide` (`applyCombo` vs. `goldenStar`); keep both.
