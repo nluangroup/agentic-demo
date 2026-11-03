@@ -1,6 +1,6 @@
 # Star Catcher
 
-A small Angular 22 game that serves as the demo target for the Claude queue in `nluangroup/jira`: queued Superpowers plans are implemented here by an unattended `claude -p` run.
+A small Angular 22 game, built with Claude and Superpowers.
 
 ## Play
 
@@ -26,8 +26,4 @@ Prints one `PASS`, `FAIL` or `SKIPPED` line per check and exits 0 only if nothin
 - Specs: `docs/superpowers/specs/`
 - Plans: `docs/superpowers/plans/`
 
-Rules for plan runs are in `CLAUDE.md`; headless permissions are in `.claude/settings.json`.
-
-## Queue this plan
-
-Ask Claude to queue a plan using the [queue-plan skill](.claude/skills/queue-plan/SKILL.md); it creates the Jira card the queue picks up.
+Rules for executing plans are in `CLAUDE.md`.
